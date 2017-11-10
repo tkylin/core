@@ -158,15 +158,18 @@ services:
       matrix:
         DB_TYPE: postgres
 
-  # oracle:
-  #   image: oracle:x.x
-  #   environment:
-  #     - ORACLE_USER=owncloud
-  #     - ORACLE_PASSWORD=owncloud
-  #     - ORACLE_DB=owncloud
-  #   when:
-  #     matrix:
-  #       DB_TYPE: oracle
+   oracle:
+     image: deepdiver/docker-oracle-xe-11g
+     ports:
+      - 49160:22
+      - 49161:1521
+     environment:
+       - ORACLE_USER=system
+       - ORACLE_PASSWORD=oracle
+       - ORACLE_DB=owncloud
+     when:
+       matrix:
+         DB_TYPE: oracle
 
 matrix:
   include:
