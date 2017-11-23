@@ -339,7 +339,11 @@ class Manager extends PublicEmitter implements IUserManager {
 		foreach ($this->backends as $backend) {
 			if ($backend->implementsActions(Backend::CREATE_USER)) {
 				$backend->createUser($uid, $password);
-				$account = $this->newAccount($uid, $backend);
+				// Create a new account entity
+				$account = $this->syncService->createNewAccount($backend, $uid);
+				// Sync the meta data
+				$this->syncService->setupAccount($account, $backend, $uid);
+				$this->accountMapper->insert($account);
 				$user = $this->getUserObject($account);
 				$this->emit('\OC\User', 'postCreateUser', [$user, $password]);
 				return $user;
@@ -349,13 +353,15 @@ class Manager extends PublicEmitter implements IUserManager {
 	}
 
 	/**
+	 * TODO isnt this the same as a few lines above?? Why do we need two methods for this. Whats the different with the preCreateUser hook data, this one doesnt send the password
 	 * @param string $uid
 	 * @param UserInterface $backend
 	 * @return IUser | null
 	 */
 	public function createUserFromBackend($uid, $password, $backend) {
 		$this->emit('\OC\User', 'preCreateUser', [$uid, '']);
-		$account = $this->newAccount($uid, $backend);
+		$account = $this->syncService->createNewAccount($backend, $uid);
+		$this->syncService->setupAccount($account, $backend, $uid);
 		$user = $this->getUserObject($account);
 		$this->emit('\OC\User', 'postCreateUser', [$user, $password]);
 		return $user;
