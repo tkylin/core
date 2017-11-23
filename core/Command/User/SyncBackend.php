@@ -120,10 +120,10 @@ class SyncBackend extends Command {
 			$missingAccountsAction = $helper->ask($input, $output, $question);
 		}
 
-		$syncService = new SyncService($this->accountMapper, $backend, $this->config, $this->logger);
+		$syncService = new SyncService($this->config, $this->logger, $this->accountMapper);
 
 		// analyse unknown users
-		$this->handleUnknownUsers($input, $output, $syncService, $missingAccountsAction, $validActions);
+		$this->handleUnknownUsers($input, $output, $backend, $syncService, $missingAccountsAction, $validActions);
 
 		// insert/update known users
 		$output->writeln("Insert new and update existing users ...");
@@ -133,7 +133,7 @@ class SyncBackend extends Command {
 			$max = $backend->countUsers();
 		}
 		$p->start($max);
-		$syncService->run(function () use ($p) {
+		$syncService->run($backend, function () use ($p) {
 			$p->advance();
 		});
 		$p->finish();
@@ -179,14 +179,15 @@ class SyncBackend extends Command {
 	/**
 	 * @param InputInterface $input
 	 * @param OutputInterface $output
-	 * @param $syncService
+	 * @param UserInterface $backend
+	 * @param SyncService $syncService
 	 * @param $missingAccountsAction
 	 * @param $validActions
 	 */
-	private function handleUnknownUsers(InputInterface $input, OutputInterface $output, $syncService, $missingAccountsAction, $validActions) {
+	private function handleUnknownUsers(InputInterface $input, OutputInterface $output, UserInterface $backend, SyncService $syncService, $missingAccountsAction, $validActions) {
 		$output->writeln("Analyse unknown users ...");
 		$p = new ProgressBar($output);
-		$toBeDeleted = $syncService->getNoLongerExistingUsers(function () use ($p) {
+		$toBeDeleted = $syncService->getNoLongerExistingUsers($backend, function () use ($p) {
 			$p->advance();
 		});
 		$p->finish();
