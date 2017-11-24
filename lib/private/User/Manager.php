@@ -82,6 +82,7 @@ class Manager extends PublicEmitter implements IUserManager {
 	 * @param IConfig $config
 	 * @param ILogger $logger
 	 * @param AccountMapper $accountMapper
+	 * @param SyncService $syncService
 	 */
 	public function __construct(IConfig $config, ILogger $logger, AccountMapper $accountMapper, SyncService $syncService) {
 		$this->config = $config;
