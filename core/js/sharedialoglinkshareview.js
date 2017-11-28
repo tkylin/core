@@ -314,7 +314,7 @@
 			var self = this;
 			var title = t('files_sharing', 'Edit link share: {name}', {name: this.itemModel.getFileInfo().getFullPath()});
 			var buttons = [{
-				text: t('core', 'Save'),
+				text: t('core', 'Share'),
 				click: _.bind(this._onClickSave, this),
 				defaultButton: true
 			}, {
