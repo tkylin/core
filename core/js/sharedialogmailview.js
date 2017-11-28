@@ -14,9 +14,9 @@
 	}
 	
 	var TEMPLATE = 
-			'<form id="emailPrivateLink" class="emailPrivateLinkForm oneline">' +
-			'    <label for="emailPrivateLinkField-{{cid}}">{{mailLabel}}</label>' +
-			'    <input id="emailPrivateLinkField-{{cid}}" class="emailField" value="{{email}}" placeholder="{{mailPrivatePlaceholder}}" type="email" />' +
+			'<form id="emailPrivateLink" class="public-link-modal--item">' +
+			'    <label class="public-link-modal--label" for="emailPrivateLinkField-{{cid}}">{{mailLabel}}</label>' +
+			'    <input id="emailPrivateLinkField-{{cid}}" class="public-link-modal--input emailField" value="{{email}}" placeholder="{{mailPrivatePlaceholder}}" type="email" />' +
 			'</form>'
 		;
 	
