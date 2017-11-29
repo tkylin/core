@@ -221,11 +221,11 @@ class Manager extends PublicEmitter implements IUserManager {
 				if ($uid !== false) {
 					try {
 						$account = $this->accountMapper->getByUid($uid);
-						$this->syncService->setupAccount($account, $backend, $account->getUserId());
+						$this->syncService->syncAccount($account, $backend, $account->getUserId());
 						$this->accountMapper->update($account);
 					} catch(DoesNotExistException $ex) {
 						$account = $this->syncService->createNewAccount($backend, $uid);
-						$this->syncService->setupAccount($account, $backend, $account->getUserId());
+						$this->syncService->syncAccount($account, $backend, $account->getUserId());
 						$this->accountMapper->insert($account);
 					}
 					return $this->getUserObject($account);
@@ -343,7 +343,7 @@ class Manager extends PublicEmitter implements IUserManager {
 				// Create a new account entity
 				$account = $this->syncService->createNewAccount($backend, $uid);
 				// Sync the meta data
-				$this->syncService->setupAccount($account, $backend, $uid);
+				$this->syncService->syncAccount($account, $backend, $uid);
 				$this->accountMapper->insert($account);
 				$user = $this->getUserObject($account);
 				$this->emit('\OC\User', 'postCreateUser', [$user, $password]);
@@ -362,7 +362,7 @@ class Manager extends PublicEmitter implements IUserManager {
 	public function createUserFromBackend($uid, $password, $backend) {
 		$this->emit('\OC\User', 'preCreateUser', [$uid, '']);
 		$account = $this->syncService->createNewAccount($backend, $uid);
-		$this->syncService->setupAccount($account, $backend, $uid);
+		$this->syncService->syncAccount($account, $backend, $uid);
 		$user = $this->getUserObject($account);
 		$this->emit('\OC\User', 'postCreateUser', [$user, $password]);
 		return $user;
