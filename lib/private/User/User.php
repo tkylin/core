@@ -41,6 +41,7 @@ use OCP\IUser;
 use OCP\IConfig;
 use OCP\IUserBackend;
 use OCP\User\IChangePasswordBackend;
+use OCP\UserInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\GenericEvent;
 
@@ -149,6 +150,12 @@ class User implements IUser {
 		}
 		$this->account->setDisplayName($displayName);
 		$this->mapper->update($this->account);
+
+		$backend = $this->account->getBackendInstance();
+		if ($backend->implementsActions(Backend::SET_DISPLAYNAME)) {
+			$backend->setDisplayName($this->account->getUserId(), $displayName);
+		}
+
 		$this->triggerChange('displayName', $displayName);
 
 		return true;
