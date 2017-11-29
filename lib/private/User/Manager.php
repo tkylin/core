@@ -219,15 +219,7 @@ class Manager extends PublicEmitter implements IUserManager {
 			if ($backend->implementsActions(Backend::CHECK_PASSWORD)) {
 				$uid = $backend->checkPassword($loginName, $password);
 				if ($uid !== false) {
-					try {
-						$account = $this->accountMapper->getByUid($uid);
-						$this->syncService->syncAccount($account, $backend, $account->getUserId());
-						$this->accountMapper->update($account);
-					} catch(DoesNotExistException $ex) {
-						$account = $this->syncService->createNewAccount($backend, $uid);
-						$this->syncService->syncAccount($account, $backend, $account->getUserId());
-						$this->accountMapper->insert($account);
-					}
+					$account = $this->syncService->createOrSyncAccount($uid, $backend);
 					return $this->getUserObject($account);
 				}
 			}
@@ -341,7 +333,7 @@ class Manager extends PublicEmitter implements IUserManager {
 			if ($backend->implementsActions(Backend::CREATE_USER)) {
 				$backend->createUser($uid, $password);
 				// Create a new account entity
-				$account = $this->syncService->createNewAccount($backend, $uid);
+				$account = $this->syncService->createNewAccount(get_class($backend), $uid);
 				// Sync the meta data
 				$this->syncService->syncAccount($account, $backend, $uid);
 				$this->accountMapper->insert($account);
