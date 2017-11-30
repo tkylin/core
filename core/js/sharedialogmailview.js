@@ -12,14 +12,14 @@
 	if (!OC.Share) {
 		OC.Share = {};
 	}
-	
-	var TEMPLATE = 
+
+	var TEMPLATE =
 			'<form id="emailPrivateLink" class="public-link-modal--item">' +
 			'    <label class="public-link-modal--label" for="emailPrivateLinkField-{{cid}}">{{mailLabel}}</label>' +
 			'    <input id="emailPrivateLinkField-{{cid}}" class="public-link-modal--input emailField" value="{{email}}" placeholder="{{mailPrivatePlaceholder}}" type="email" />' +
 			'</form>'
 		;
-	
+
 	/**
 	 * @class OCA.Share.ShareDialogMailView
 	 * @member {OC.Share.ShareItemModel} model
@@ -77,7 +77,7 @@
 						deferred.resolve();
 					}
 			}).fail(function() {
-				deferred.reject();
+				return deferred.reject();
 			});
 
 			return deferred.promise();
@@ -96,13 +96,11 @@
 				$emailButton.prop('disabled', true);
 				$emailField.val(t('core', 'Sending ...'));
 				return this._sendEmailPrivateLink(email).done(function() {
-					$emailField.css('font-weight', 'bold').val(t('core','Email sent'));
-					setTimeout(function() {
-						$emailField.val('');
-						$emailField.css('font-weight', 'normal');
-						$emailField.prop('disabled', false);
-						$emailButton.prop('disabled', false);
-					}, 2000);
+					OC.dialogs.info(t('core', 'Notification was send to ' + email), "Success");
+					$emailField.val('');
+					$emailField.css('font-weight', 'normal');
+					$emailField.prop('disabled', false);
+					$emailButton.prop('disabled', false);
 				}).fail(function() {
 					$emailField.val(email);
 					$emailField.css('font-weight', 'normal');
@@ -115,7 +113,7 @@
 
 		render: function() {
 			var email = this.$el.find('.emailField').val();
-	
+
 			this.$el.html(this.template({
 				cid: this.cid,
 				mailPrivatePlaceholder: t('core', 'Email link to person'),
