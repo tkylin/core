@@ -57,8 +57,8 @@
 
 			if (!this.validateEmail(recipientEmail)) {
 				return deferred.reject({
-                    message: t('core', '{email} is not a valid address!', {email: recipientEmail})
-                });
+					message: t('core', '{email} is not a valid address!', {email: recipientEmail})
+				});
 			}
 
 			$.post(
@@ -74,8 +74,8 @@
 				function(result) {
 					if (!result || result.status !== 'success') {
 						deferred.reject({
-                            message: result.status.message
-                        });
+							message: result.status.message
+						});
 					} else {
 						deferred.resolve();
 					}
@@ -96,24 +96,24 @@
 			var email = $emailField.val();
 			if (email !== '') {
 				$emailButton.prop('disabled', true);
-                $emailField
-                    .prop('disabled', true)
-	                .val(t('core', 'Sending ...'));
+				$emailField
+					.prop('disabled', true)
+					.val(t('core', 'Sending ...'));
 
 				return this._sendEmailPrivateLink(email).done(function() {
 					OC.dialogs.info(t('core', 'Notification was send to {email}', {email: email}), "Success");
 					$emailButton.prop('disabled', false);
-                    $emailField
-                        .prop('disabled', false)
-                        .val('');
+					$emailField
+						.prop('disabled', false)
+						.val('');
 
 				}).fail(function(error) {
-                    OC.dialogs.info(error.message, t('core', 'An error occured'));
+					OC.dialogs.info(error.message, t('core', 'An error occured'));
 					$emailButton.prop('disabled', false);
-                    $emailField
-                        .css('color', 'red')
-                        .prop('disabled', false)
-                        .val(email);
+					$emailField
+						.css('color', 'red')
+						.prop('disabled', false)
+						.val(email);
 				});
 			}
 			return $.Deferred().resolve();
@@ -131,10 +131,10 @@
 
 			var $emailField = this.$el.find('.emailField');
 
-            $emailField.focus(function(){
-                // remove styles attached on error
-                $(this).removeAttr('style')
-            });
+			$emailField.focus(function(){
+				// remove styles attached on error
+				$(this).removeAttr('style')
+			});
 
 			if ($emailField.length !== 0) {
 				$emailField.autocomplete({

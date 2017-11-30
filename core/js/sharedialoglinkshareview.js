@@ -181,7 +181,7 @@
 				success: function() {
 					if (self.mailView) {
 						// also send out email first
-                        // do not resolve on errors
+						// do not resolve on errors
 						self.mailView.sendEmails().then(done);
 					} else {
 						done();
