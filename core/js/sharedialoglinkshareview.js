@@ -181,11 +181,8 @@
 				success: function() {
 					if (self.mailView) {
 						// also send out email first
-						self.mailView.sendEmails().then(done).fail(function() {
-							done();
-							// re-show the popup
-							self.show();
-						});
+                        // do not resolve on errors
+						self.mailView.sendEmails().then(done);
 					} else {
 						done();
 					}
